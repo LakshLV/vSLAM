@@ -10,11 +10,13 @@ find_package(OpenCV REQUIRED)
 
 add_executable(vslam
     src/main.cpp
+    src/features.cpp
 )
 
 add_executable(test
     src/test.cpp
     src/features.cpp
+    src/geometry.cpp
 )
 
 target_link_libraries(vslam

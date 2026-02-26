@@ -373,6 +373,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\Users\Laksh\projects\VSLAM\src\main.cpp" />
+    <ClCompile Include="C:\Users\Laksh\projects\VSLAM\src\features.cpp" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

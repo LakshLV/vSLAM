@@ -1,9 +1,10 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include "features.h"
+#include "geometry.h"
 
 int main() {
-    // ============== Configuration ==============
+    // Configuration
     const int MAX_CORNERS = 100;
     const double QUALITY_LEVEL = 0.01;
     const double MIN_DISTANCE = 30;
@@ -14,6 +15,7 @@ int main() {
     const int GRID_COLS = 4;
     const int MIN_FEATURES_PER_CELL = 5;
     const int MAX_FEATURES_PER_CELL = 10;
+    const int IMAGE_SIZE = 2000;
 
 
     //Initialization
@@ -32,6 +34,13 @@ int main() {
         return -1;
     }
 
+    cameraIntrinsics intrinsics;
+            intrinsics.fx = IMAGE_SIZE / 2.0;
+            intrinsics.fy = IMAGE_SIZE / 2.0;
+            intrinsics.cx = IMAGE_SIZE / 2.0;
+            intrinsics.cy = IMAGE_SIZE / 2.0;
+
+
     cv::cvtColor(frame, grayframe, cv::COLOR_BGR2GRAY);
 
     double cellwidth = frame.cols / (double)GRID_COLS;
@@ -45,7 +54,7 @@ int main() {
     std::vector<int> cellCount;
     int nextId = 0;
 
-    // ============== Detect Initial Features ==============
+    // Detect Initial Features
     detectInitialFeatures(
         grayframe, features, MAX_CORNERS, QUALITY_LEVEL, MIN_DISTANCE,
         BLOCK_SIZE, USE_HARRIS_DETECTOR, HARRIS_K, nextId, mask);
@@ -56,18 +65,18 @@ int main() {
     prevgray = grayframe.clone();
     prevpoints = extractPoints(features);
 
-    // ============== Main Loop ==============
+    // Main Loop
     while (true) {
         int key = cv::waitKey(30);
 
-        // ===== Process next frame (press 'd') =====
+        // Process next frame (press 'd')  
         if (key == 100) {  // 'd' key
             cap >> frame;
             if (frame.empty()) {
                 std::cout << "End of video" << std::endl;
                 break;
             }
-            // hellogit 
+             
             cv::cvtColor(frame, grayframe, cv::COLOR_BGR2GRAY);
 
             // Track features using optical flow
@@ -111,6 +120,13 @@ int main() {
                     grayframe, features, MAX_CORNERS, QUALITY_LEVEL, MIN_DISTANCE,
                     BLOCK_SIZE, USE_HARRIS_DETECTOR, HARRIS_K, nextId, mask);
             }
+
+            
+            pose relativePose = estimateRelativePose(prevpoints, nextPoints, intrinsics);
+            
+            rotationMatrixToAngle(relativePose.R);
+
+            
 
             cv::imshow("VSLAM", grayframe);
 

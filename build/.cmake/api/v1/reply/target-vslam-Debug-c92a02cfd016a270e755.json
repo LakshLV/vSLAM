@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "MinSizeRel/vslam.exe"
+			"path" : "Debug/vslam.exe"
 		},
 		{
-			"path" : "MinSizeRel/vslam.pdb"
+			"path" : "Debug/vslam.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -34,7 +34,7 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 20,
+				"line" : 22,
 				"parent" : 0
 			}
 		]
@@ -117,7 +117,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O1 /Ob1 /DNDEBUG -std:c++17 -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd"
 				}
 			],
 			"includes" : 
@@ -139,7 +139,8 @@
 			},
 			"sourceIndexes" : 
 			[
-				0
+				0,
+				1
 			]
 		}
 	],
@@ -155,11 +156,11 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /O1 /Ob1 /DNDEBUG -MD",
+				"fragment" : "/DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -MDd",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /INCREMENTAL:NO",
+				"fragment" : "/machine:x64 /debug /INCREMENTAL",
 				"role" : "flags"
 			},
 			{
@@ -168,82 +169,82 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120.lib",
+				"fragment" : "C:\\Users\\Laksh\\OpenCV\\opencv\\build\\x64\\vc16\\lib\\opencv_world4120d.lib",
 				"role" : "libraries"
 			},
 			{
@@ -333,7 +334,8 @@
 			"name" : "Source Files",
 			"sourceIndexes" : 
 			[
-				0
+				0,
+				1
 			]
 		}
 	],
@@ -343,6 +345,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/main.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/features.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

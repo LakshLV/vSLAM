@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <map>
 
-// ============== Feature Creation ==============
+// Feature Creation 
 Feature createFeature(cv::Point2f point, int id, int age) {
     Feature feature;
     feature.point = point;
@@ -12,7 +12,7 @@ Feature createFeature(cv::Point2f point, int id, int age) {
     return feature;
 }
 
-// ============== Feature Detection ==============
+// Feature Detection 
 void detectInitialFeatures(
     const cv::Mat& grayframe,
     std::vector<Feature>& features,
@@ -45,7 +45,7 @@ void detectInitialFeatures(
     }
 }
 
-// ============== Feature Tracking ==============
+// Feature Tracking
 std::vector<Feature> trackFeatures(
     const cv::Mat& prevgray, const cv::Mat& grayframe,
     std::vector<cv::Point2f>& prevpoints,
@@ -76,7 +76,7 @@ std::vector<Feature> trackFeatures(
             trackedFeatures.push_back(trackedFeature);
             validNextPoints.push_back(nextPoints[i]);
             validPrevPoints.push_back(prevpoints[i]);
-            std::cout << "tracked successfully feature id: " << trackedFeature.id << std::endl;
+            //std::cout << "tracked successfully feature id: " << trackedFeature.id << std::endl;
         }
     }
 
@@ -127,7 +127,7 @@ void drawTracks(
                        0.5,
                        cv::Scalar(255, 255, 255),
                        1);
-            std::cout << "feature number: " << features[i].id << std::endl;
+            //std::cout << "feature number: " << features[i].id << std::endl;
         }
     }
 }
