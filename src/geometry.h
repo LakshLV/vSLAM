@@ -15,7 +15,7 @@ struct pose {
     cv::Mat t; // Translation vector (3x1)
 };
 
-pose estimateRelativePose(
+pose estimateRelativePose(cv::Mat& grayframe,
     const std::vector<cv::Point2f>& points1,
     const std::vector<cv::Point2f>& points2,
     const cameraIntrinsics& intrinsics
@@ -23,3 +23,7 @@ pose estimateRelativePose(
 );
 
 int rotationMatrixToAngle(const cv::Mat& R);
+
+void visualizeInliersAndOutliers(cv::Mat& grayframe, const std::vector<cv::Point2f>& points1,
+                                const std::vector<cv::Point2f>& points2,
+                                const cv::Mat& inlierMask);

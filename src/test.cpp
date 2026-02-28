@@ -35,10 +35,10 @@ int main() {
     }
 
     cameraIntrinsics intrinsics;
-            intrinsics.fx = IMAGE_SIZE / 2.0;
-            intrinsics.fy = IMAGE_SIZE / 2.0;
-            intrinsics.cx = IMAGE_SIZE / 2.0;
-            intrinsics.cy = IMAGE_SIZE / 2.0;
+            intrinsics.fx = frame.cols / 2.0;
+            intrinsics.fy = frame.cols / 2.0;
+            intrinsics.cx = frame.cols / 2.0;
+            intrinsics.cy = frame.rows / 2.0;
 
 
     cv::cvtColor(frame, grayframe, cv::COLOR_BGR2GRAY);
@@ -100,8 +100,8 @@ int main() {
             // );
 
             // Draw tracks and features
-            drawTracks(grayframe, features, prevpoints, nextPoints, status);
-            drawFeatures(grayframe, features);
+            //drawTracks(grayframe, features, prevpoints, nextPoints, status);
+            //drawFeatures(grayframe, features);
 
             // std::vector<Feature> newFeatures;
             // for (size_t i = 0; i < nextPoints.size(); i++) {
@@ -122,13 +122,14 @@ int main() {
             }
 
             
-            pose relativePose = estimateRelativePose(prevpoints, nextPoints, intrinsics);
+            pose relativePose = estimateRelativePose(frame, prevpoints, nextPoints, intrinsics);
             
             rotationMatrixToAngle(relativePose.R);
 
             
+            
 
-            cv::imshow("VSLAM", grayframe);
+            cv::imshow("VSLAM", frame);
 
             
 
