@@ -123,8 +123,12 @@ int main() {
 
             
             pose relativePose = estimateRelativePose(frame, prevpoints, nextPoints, intrinsics);
+
+            
             
             rotationMatrixToAngle(relativePose.R);
+
+
 
             
             

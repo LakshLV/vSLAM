@@ -27,3 +27,9 @@ int rotationMatrixToAngle(const cv::Mat& R);
 void visualizeInliersAndOutliers(cv::Mat& grayframe, const std::vector<cv::Point2f>& points1,
                                 const std::vector<cv::Point2f>& points2,
                                 const cv::Mat& inlierMask);
+
+std::vector<cv::Point3d> triangulatePoints(const std::vector<cv::Point2f>& points1,
+                                    const std::vector<cv::Point2f>& points2,
+                                    const cameraIntrinsics& intrinsics,
+                                    cv::Mat inlierMask,
+                                    const cv::Mat& R, const cv::Mat& t);
