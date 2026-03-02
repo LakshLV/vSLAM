@@ -13,6 +13,7 @@ struct cameraIntrinsics {
 struct pose {
     cv::Mat R; // Rotation matrix (3x3)
     cv::Mat t; // Translation vector (3x1)
+    cv::Mat inlierMask;
 };
 
 pose estimateRelativePose(cv::Mat& grayframe,

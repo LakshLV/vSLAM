@@ -21,6 +21,7 @@ pose estimateRelativePose(cv::Mat& grayframe,
         pose result;
         result.R = cv::Mat::eye(3, 3, CV_64F);
         result.t = cv::Mat::zeros(3, 1, CV_64F);
+        result.inlierMask = cv::Mat::zeros(points1.size(), 1, CV_8U); // No inliers
         return result;
     }
     cv::Mat inlierMask;
@@ -34,31 +35,20 @@ pose estimateRelativePose(cv::Mat& grayframe,
         return result;  // return identity pose
     }
     cv::Mat E = cv::findEssentialMat(points1, points2, intrinsics.fx, cv::Point2d(intrinsics.cx, intrinsics.cy), cv::FM_RANSAC, 0.99, 1.0, inlierMask);
-    std::cout << "Essential Matrix:\n" << E << std::endl;
     for(int i = 0; i < inlierMask.rows; i++) {
         if (inlierMask.at<uchar>(i,0)) {
             std::cout << "Inlier Point Pair: (" << points1[i] << ", " << points2[i] << ")\n";
         }
     }
 
-    visualizeInliersAndOutliers(grayframe, points1, points2, inlierMask);
-
+    
     // Step 2: Decompose Essential Matrix to get R and t
     cv::Mat R, t;
     cv::recoverPose(E, points1, points2, R, t, intrinsics.fx, cv::Point2d(intrinsics.cx, intrinsics.cy), inlierMask);
-    std::cout << "Recovered Rotation Matrix:\n" << R << std::endl;
-    std::cout << "Recovered Translation Vector:\n" << t << std::endl;
     pose result;
     result.R = R;
     result.t = t;
-
-    
-    std::vector<cv::Point3d> points3D = triangulatePoints(points1, points2, intrinsics, inlierMask, R, t);
-
-    std::cout << "Triangulated 3D Points:\n";
-    for (const auto& pt : points3D) {
-        std::cout << pt << std::endl;
-    }
+    result.inlierMask = inlierMask.clone();
 
     return result;
 

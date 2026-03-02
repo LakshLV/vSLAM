@@ -40,6 +40,13 @@ int main() {
             intrinsics.cx = frame.cols / 2.0;
             intrinsics.cy = frame.rows / 2.0;
 
+    // World pose initialization
+    cv::Mat T_world = cv::Mat::eye(4,4,CV_64F);
+    std::vector<cv::Mat> trajectory;
+    trajectory.push_back(T_world.clone());
+
+    std::vector<cv::Point3d> globalMap;
+
 
     cv::cvtColor(frame, grayframe, cv::COLOR_BGR2GRAY);
 
@@ -90,84 +97,50 @@ int main() {
                                    nextPoints, status, err);
 
 
-            // cv::calcOpticalFlowPyrLK(
-            //     prevgray,
-            //     grayframe,
-            //     prevpoints,
-            //     nextPoints,
-            //     status,
-            //     err
-            // );
-
-            // Draw tracks and features
-            //drawTracks(grayframe, features, prevpoints, nextPoints, status);
-            //drawFeatures(grayframe, features);
-
-            // std::vector<Feature> newFeatures;
-            // for (size_t i = 0; i < nextPoints.size(); i++) {
-            //     if (status[i] && i < features.size()) {
-            //         Feature f = features[i];
-            //         f.point = nextPoints[i];
-            //         f.age += 1;
-            //         newFeatures.push_back(f);
-            //     }
-            // }
-            
-            // features = newFeatures;
-
             if(features.size() < (size_t)MAX_CORNERS / 2) {
                 detectInitialFeatures(
                     grayframe, features, MAX_CORNERS, QUALITY_LEVEL, MIN_DISTANCE,
                     BLOCK_SIZE, USE_HARRIS_DETECTOR, HARRIS_K, nextId, mask);
             }
 
+
             
             pose relativePose = estimateRelativePose(frame, prevpoints, nextPoints, intrinsics);
 
+            cv::Mat T = cv::Mat::eye(4,4,CV_64F);
+            relativePose.R.copyTo(T(cv::Rect(0,0,3,3)));
+            relativePose.t.copyTo(T(cv::Rect(3,0,1,3)));
             
-            
-            rotationMatrixToAngle(relativePose.R);
+            T_world = T_world * T;
 
+            trajectory.push_back(T_world.clone());
 
+            //triangulate points and add to global map with outlier rejection
+            std::vector<cv::Point3d> newMapPoints = triangulatePoints(prevpoints, nextPoints, intrinsics, relativePose.inlierMask, relativePose.R, relativePose.t);
+
+            std::cout << "Triangulated 3D Points:\n";
+            for (const auto& pt : newMapPoints) {
+                std::cout << pt << std::endl;
+            }
+            for(auto& pt : newMapPoints) {
+
+                cv::Mat pt_cam = (cv::Mat_<double>(4,1) << pt.x, pt.y, pt.z, 1.0);
+                cv::Mat pt_world = T_world * pt_cam;
+
+                globalMap.push_back(cv::Point3d(
+                    pt_world.at<double>(0),
+                    pt_world.at<double>(1),
+                    pt_world.at<double>(2)
+                ));
+            }
 
             
-            
+
+            //rotationMatrixToAngle(relativePose.R);
+
 
             cv::imshow("VSLAM", frame);
 
-            
-
-            
-
-            // Compute cell distribution
-            // computeCellCounts(features, cellCount, cellwidth, cellheight,
-            //                 GRID_ROWS, GRID_COLS);
-
-            // std::cout << "\n--- Cell Distribution ---" << std::endl;
-            // for (int i = 0; i < GRID_ROWS; i++) {
-            //     for (int j = 0; j < GRID_COLS; j++) {
-            //         std::cout << "Cell[" << i << "][" << j << "]: "
-            //                  << cellCount[i * GRID_COLS + j] << " ";
-            //     }
-            //     std::cout << std::endl;
-            // }
-            // mask = cv::Mat::ones(frame.size(), CV_8UC1) * 255; // Reset mask
-            // // Add new features if needed to balance cell distribution
-            // addFeaturesByCell(grayframe, mask, features, MAX_CORNERS,
-            //                 QUALITY_LEVEL, MIN_DISTANCE, BLOCK_SIZE,
-            //                 USE_HARRIS_DETECTOR, HARRIS_K, nextId,
-            //                 cellCount, cellwidth, cellheight,
-            //                 GRID_ROWS, GRID_COLS, MIN_FEATURES_PER_CELL);
-
-            
-
-            // // Remove features if any cell exceeds max features per cell
-            // removeFeaturesByCell(features, cellwidth, cellheight,
-            //                     GRID_ROWS, GRID_COLS, MAX_FEATURES_PER_CELL);
-
-            //std::cout << "Total features: " << features.size() << "\n" << std::endl;
-
-            
 
             // Update for next iteration
             prevgray = grayframe.clone();
