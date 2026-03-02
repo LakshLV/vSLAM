@@ -25,6 +25,14 @@ pose estimateRelativePose(cv::Mat& grayframe,
     }
     cv::Mat inlierMask;
     // Step 1: Compute Essential Matrix
+    if(points1.size() != points2.size()) {
+        std::cerr << "ERROR: points1.size() (" << points1.size() 
+                  << ") != points2.size() (" << points2.size() << ")" << std::endl;
+        pose result;
+        result.R = cv::Mat::eye(3, 3, CV_64F);
+        result.t = cv::Mat::zeros(3, 1, CV_64F);
+        return result;  // return identity pose
+    }
     cv::Mat E = cv::findEssentialMat(points1, points2, intrinsics.fx, cv::Point2d(intrinsics.cx, intrinsics.cy), cv::FM_RANSAC, 0.99, 1.0, inlierMask);
     std::cout << "Essential Matrix:\n" << E << std::endl;
     for(int i = 0; i < inlierMask.rows; i++) {
@@ -108,17 +116,20 @@ std::vector<cv::Point3d> triangulatePoints(const std::vector<cv::Point2f>& point
     cv::Mat P1 = (cv::Mat_<double>(3, 4) << intrinsics.fx, 0, intrinsics.cx, 0,
                                             0, intrinsics.fy, intrinsics.cy, 0,
                                             0, 0, 1, 0);
-
-    R.type() == CV_32F ? R.convertTo(R, CV_64F) : R;
-    t.type() == CV_32F ? t.convertTo(t, CV_64F) : t;
+    cv::Mat R64, t64;
+    if(R.type() == CV_32F) R.convertTo(R64, CV_64F);
+    if(t.type() == CV_32F) t.convertTo(t64, CV_64F);
+    
     P1.type() == CV_32F ? P1.convertTo(P1, CV_64F) : P1;
     
 
-    cv::Mat P2 = (cv::Mat_<double>(3, 4) << R.at<double>(0,0), R.at<double>(0,1), R.at<double>(0,2), t.at<double>(0,0),
-                                            R.at<double>(1,0), R.at<double>(1,1), R.at<double>(1,2), t.at<double>(1,0),
-                                            R.at<double>(2,0), R.at<double>(2,1), R.at<double>(2,2), t.at<double>(2,0));
+    cv::Mat k = (cv::Mat_<double>(3, 3) << intrinsics.fx, 0, intrinsics.cx,
+                                    0, intrinsics.fy, intrinsics.cy,
+                                    0, 0, 1);
 
-    
+    cv::Mat Rt;
+    cv::hconcat(R, t, Rt);
+    cv::Mat P2 = k * Rt;
 
     P2.type() == CV_32F ? P2.convertTo(P2, CV_64F) : P2;
 
@@ -128,6 +139,11 @@ std::vector<cv::Point3d> triangulatePoints(const std::vector<cv::Point2f>& point
 
     points1Mat.type() == CV_32F ? points1Mat.convertTo(points1Mat, CV_64F) : points1Mat;
     points2Mat.type() == CV_32F ? points2Mat.convertTo(points2Mat, CV_64F) : points2Mat;
+
+    std::cout << "P1 size: " << P1.rows << " x " << P1.cols << std::endl;
+    std::cout << "P2 size: " << P2.rows << " x " << P2.cols << std::endl;
+    std::cout << "points1Mat size: " << points1Mat.rows << " x " << points1Mat.cols << std::endl;
+    std::cout << "points2Mat size: " << points2Mat.rows << " x " << points2Mat.cols << std::endl;
     for(size_t i = 0; i < inlierPoints1.size(); i++){
         points1Mat.at<double>(0,i) = inlierPoints1[i].x;
         points1Mat.at<double>(1,i) = inlierPoints1[i].y;
@@ -136,7 +152,10 @@ std::vector<cv::Point3d> triangulatePoints(const std::vector<cv::Point2f>& point
     }
 
     cv::Mat points4D;
-    
+    if(inlierPoints1.size() < 5 || inlierPoints2.size() < 5){
+        std::cout << "Not enough inliers for triangulation. Returning empty point cloud." << std::endl;
+        return std::vector<cv::Point3d>();
+    }
     cv::triangulatePoints(P1, P2, points1Mat, points2Mat, points4D);
     std::vector<cv::Point3d> points3D;
     for(int i = 0; i < points4D.cols; i++){
@@ -145,17 +164,13 @@ std::vector<cv::Point3d> triangulatePoints(const std::vector<cv::Point2f>& point
             points3D.push_back(cv::Point3d(point[0]/point[3], point[1]/point[3], point[2]/point[3]));
             std::cout << "Triangulated point (homogeneous): " << point << std::endl;
             std::cout << "Triangulated z value: " << points3D.back().z << std::endl;
-            if(point[2] < 0){
+            if(points3D.back().z < 0){
                 std::cout << "Triangulated point is behind the camera: " << points3D.back() << std::endl;
                 points3D.pop_back(); // Remove the point that is behind the camera
             }
         }
         
     }
-
-
-    
-
 
     return points3D;
                         
